@@ -340,7 +340,10 @@ def discover_mqtt_host():
 
 
 ##print(SystemStats.version)
-logging.basicConfig(filename='/tmp/apdata.log', level=logging.INFO)
+//logging.basicConfig(filename='/tmp/apdata.log', level=logging.INFO)
+time_format = "%d%b%Y %H:%M:%S.%f"
+logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', datefmt=time_format, filename='/tmp/apdata.log', level=logging.INFO)
+
 logging.info('AccessPointData v1.0 [new interfaces]')
 logging.info('Version:' + NetworkInterfaces.version )
 logging.debug('Attempting to find mqtt broker via mDNS')
