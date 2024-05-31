@@ -260,8 +260,8 @@ class NetworkInterfaces(object):
     # ------------------------------------------------------------------------------------------------
     def asJSON(self):
         myDict = OrderedDict({
-            "topic": 'AP',
-            "version": '1.0',
+            "topic": 'APDATA',
+            "version": '1.1',
             "dateTime": datetime.datetime.now().replace(microsecond=0).isoformat(),
             "host": self.get_hostname(),
             "clients": self.get_interface_data(),
