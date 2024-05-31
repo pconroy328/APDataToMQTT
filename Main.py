@@ -78,6 +78,28 @@ class NetworkInterfaces(object):
             ## 		associated at:	1711234188512 ms
             ## 		current time:	1711404731309 ms
 
+            ## -------------------------------------------------------
+            ## Station 00:c1:40:51:01:04 (on wlan0)
+            ##	inactive time:	2000 ms
+            ##	rx bytes:	441076
+            ##	rx packets:	2156
+            ##	tx bytes:	115864
+            ##	tx packets:	1389
+            ##	tx failed:	36
+            ##	tx bitrate:	21.6 MBit/s
+            ##	rx bitrate:	39.0 MBit/s
+            ##	authorized:	yes
+            ##	authenticated:	yes
+            ##	associated:	yes
+            ##	WMM/WME:	yes
+            ##	TDLS peer:	no
+            ##	DTIM period:	2
+            ##	beacon interval:100
+            ##	short slot time:yes
+            ##	connected time:	2309 seconds
+            ##	current time:	1717177939908 ms
+
+
 
             # Split the output into sections for each station
             sections = output.strip().split('Station')
@@ -99,6 +121,9 @@ class NetworkInterfaces(object):
 
                     if 'expected throughput:' in a_line:
                         expected_thruput = a_line.split("expected throughput:")[1].split("\n")[0].strip()
+                    elif 'tx bitrate' in a_line:
+                        expected_thruput = a_line.split("tx bitrate:")[1].split("\n")[0].strip()
+                       ## print('yes', expected_thruput, '!')
 
                     if 'connected time:' in a_line:
                         connect_time_secs = a_line.split("connected time:")[1].split("\n")[0].strip()
@@ -161,8 +186,10 @@ class NetworkInterfaces(object):
             # Extract hostname from the first line of the arp output
             first_line_match = re.match(r'(\S+)\s+', line)
             hostname = first_line_match.group(1) if first_line_match else None
+            if hostname == None:
+               pass
 
-            if line.strip():
+            elif line.strip():
                 # Use regular expressions to extract IP address, MAC address, and interface
                 match = re.match(r'\S+\s+\((.*?)\)\s+at\s+([^\s]+)\s+\[ether\]\s+on\s+(\S+)', line)
                 if match:
@@ -189,13 +216,14 @@ class NetworkInterfaces(object):
         network_interfaces = list(self.get_ip_addresses(socket.AF_INET))
 
         for item in network_interfaces:
-            if (item[0][:3] == "wlx") or (item[0][:3] == "wla"):
+            if (item[0][:3] == "wlx") or (item[0][:3] == "wla") or (item[0][:4] == "wlan"):
                 itype, ssid, mac_addr = self.get_type_ssid_mac(item[0])
                 if (itype == "AP"):
                     num_clients, station_data = self.get_connected_client_data(item[0])
                     ##
                     ## station_data comes back as a dictionary
-                    ## key = client mac address, value = {'mac': '0c:8b:95:aa:b8:f0', 'avg_signal': '-38 dBm', 'exp_thruput': '26.91Mbps', 'connect_time': '170891 seconds'}
+                    ## key = client mac address, value = {'mac': '0c:8b:95:aa:b8:f0', 'avg_signal': '-38 dBm', 
+                    ##        'exp_thruput': '26.91Mbps', 'connect_time': '170891 seconds'}
 
                     arp_data = self.parse_arp_table(item[0])
 
@@ -215,8 +243,15 @@ class NetworkInterfaces(object):
                         station_host = "--"
                         station_ip_addr = "x.x.x.x"
                         station_mac_str = a_station['mac']
-                        station_signal = int(a_station['avg_signal'].split('dBm')[0])
-                        station_thruput = float(a_station['exp_thruput'].split('Mbps')[0])
+                        try:
+                            station_signal = int(a_station['avg_signal'].split('dBm')[0])
+                        except:
+                            station_signal = 0
+                        try:
+                            station_thruput = float(a_station['exp_thruput'].split('Mbps')[0])
+                        except:
+                            station_thruput = 0.0
+
                         station_connect_secs = int(a_station['connect_time'].split('sec')[0])
 
                         ##

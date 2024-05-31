@@ -3,9 +3,9 @@ mac, name
 b0:a7:32:30:08:90, esp32_cam_1
 d8:3a:dd:ec:80:f0, newpi
 00:c0:ca:8f:eb:03, mqttrv_wlan
-00:c1:40:51:01:04, mqttrv_ap
+00:c1:40:51:01:04, sccrv_new
 b8:27:eb:33:51:eb, obd2rv_old
 b8:27:eb:67:c0:2f, obd2rv
 64:5a:04:c8:ce:6b, toshiba_laptop
-00:0b:81:9b:1e:af, sccrv
+00:0b:81:9b:1e:af, sccrv_old
 2c:8d:b1:73:79:09, microasus_laptop
